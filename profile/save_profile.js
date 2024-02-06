@@ -1,16 +1,16 @@
 "use strict";
 
 const isDate = text => {
-	if ( ! /^[01]?\d\/[0-3]\d\/\d{4}$/.test(text) ) { return false; }
-	
-	const index1 = text.indexOf( "/" );
-	const index2 = text.indexOf( "/", index1 + 1 );
-	const month = parseInt( text.substring( 0, index1 ) );
-	const day = parseInt( text.substring( index1 + 1, index2 ) );
-	
-	if( month < 1 || month > 12 ) { 
-		return false; 
-	} else {
+    if (!/^[01]?\d\/[0-3]\d\/\d{4}$/.test(text)) { return false; }
+    
+    const index1 = text.indexOf("/");
+    const index2 = text.indexOf("/", index1 + 1);
+    const month = parseInt(text.substring(0, index1));
+    const day = parseInt(text.substring(index1 + 1, index2));
+    
+    if (month < 1 || month > 12) { 
+        return false; 
+    } else {
         switch(month) {
             case 2:
                 return (day > 28) ? false : true;
@@ -25,8 +25,8 @@ const isDate = text => {
     }
 };
 
-$(document).ready( () => {
-    $( "#save" ).click( () => {
+$(document).ready(() => {
+    $("#save").click(() => {
         $("span").text("");   // clear any previous error messages
         let isValid = true;   // initialize isValid flag
         
@@ -35,30 +35,36 @@ $(document).ready( () => {
         const postal = $("#postal").val();
         const dob = $("#dob").val();
         
-        if ( email === "" || !email.match(/^[\w\.\-]+@[\w\.\-]+\.[a-zA-Z]+$/) ) {
+        if (email === "" || !email.match(/^[\w\.\-]+@[\w\.\-]+\.[a-zA-Z]+$/)) {
             isValid = false;
             $("#email").next().text("Please enter a valid email.");
         }
-        if ( phone === "" || !phone.match(/^\d{3}-\d{3}-\d{4}$/) ) {
+        if (phone === "" || !phone.match(/^\d{3}-\d{3}-\d{4}$/)) {
             isValid = false;
             $("#phone").next().text("Please enter a phone number in NNN-NNN-NNNN format.");
         }
-        if ( postal === "" || !postal.match(/^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i) ) {
+        if (postal === "" || !postal.match(/^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i)) {
             isValid = false;
             $("#postal").next().text("Please enter a valid postal code.");
         }
-        if ( dob === "" || !isDate(dob) ) {
+        if (dob === "" || !isDate(dob)) {
             isValid = false;
             $("#dob").next().text("Please enter a valid date in MM/DD/YYYY format.");
         }
         
         if (isValid) { 
-            // code that saves profile info goes here
+            // Save profile info to session storage
+            sessionStorage.setItem("email", email);
+            sessionStorage.setItem("phone", phone);
+            sessionStorage.setItem("postal", postal);
+            sessionStorage.setItem("dob", dob);
+
+            // Navigate to profile.html
+            window.location = "profile.html";
         }
         
         $("#email").focus(); 
     });
     
-    // set focus on initial load
     $("#email").focus();
-}); 
+});
